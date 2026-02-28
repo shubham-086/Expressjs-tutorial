@@ -1,29 +1,31 @@
 import { Router } from "express";
-import { readTodos, writeTodos } from "../utils/helper.js";
+import {
+  createNewTodo,
+  deleteTododById,
+  getAllTodos,
+  getTodoById,
+  partiallyUpdateTodoById,
+  updateTodoById,
+} from "../controllers/todo-controllers.js";
+import { authMiddleware } from "../middlewares/auth-middleware.js";
 const router = Router();
 
 // Get all todos
-router.get("/", (req, res) => {
-  const todos = readTodos();
-  res.send(todos);
-});
+router.get("/", getAllTodos);
+
+// Get a single todo by ID
+router.get("/:id", authMiddleware, getTodoById);
 
 // Create a new todo
-router.post("/", (req, res) => {
-  const { title, description } = req.body;
+router.post("/", createNewTodo);
 
-  if (!title || !description) {
-    res.send({ error: "Title and Description are required." });
-  }
+// Update a todo by ID
+router.put("/:id", updateTodoById);
 
-  const newTodo = { id: Date.now(), title, description };
+// Partially update a todo by ID
+router.patch("/:id", partiallyUpdateTodoById);
 
-  const todos = readTodos();
-  todos.push(newTodo);
-
-  writeTodos(todos);
-
-  res.send({ todo: { title, description } });
-});
+// Delete a todo by ID
+router.delete("/:id", deleteTododById);
 
 export default router;
