@@ -8,7 +8,8 @@ export const getAllTodos = (req, res) => {
 export const getTodoById = (req, res) => {
   const { id } = req.params;
   const { eg } = req.query;
-  console.log("Query:", eg);
+  const { user } = req;
+  console.log("User:", user);
 
   const todos = readTodos();
   const todo = todos.find((t) => t.id === Number(id));
