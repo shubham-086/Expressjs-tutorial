@@ -1,14 +1,18 @@
 import getToken from "../utils/getToken.js";
-
-const user = {
-  name: "Akshay",
-  email: "asdf123@gmail.com",
-  password: "asdf@123",
-};
+import { readUsers, writeUsers } from "../utils/helper.js";
 
 export const login = (req, res) => {
   try {
     const { email, password } = req.body;
+
+    const users = readUsers();
+    const userIndex = users.findIndex((u) => email === u.email);
+
+    const user = users[userIndex];
+
+    if (!user) {
+      res.status(404).send("User not found!");
+    }
 
     if (email === user.email && password === user.password) {
       const token = getToken(user);
@@ -22,6 +26,28 @@ export const login = (req, res) => {
     return res.status(401).send("Unauthorized user");
   } catch (error) {
     console.log("Error in Login:", error);
+    res.status(500).send("Something went wrong!");
+  }
+};
+
+export const signUp = (req, res) => {
+  try {
+    let { name, email, password } = req.body;
+
+    if (!name && !email && !password) {
+      res.status(400).send("All fields are required");
+    }
+
+    const newUsers = { name, email, password };
+
+    const users = readUsers() || [];
+    users.push(newUsers);
+
+    writeUsers(users);
+
+    res.status(201).send("Registration successfull.");
+  } catch (error) {
+    console.log(error);
     res.status(500).send("Something went wrong!");
   }
 };

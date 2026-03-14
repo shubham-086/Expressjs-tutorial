@@ -14,10 +14,10 @@ const router = Router();
 router.get("/", getAllTodos);
 
 // Get a single todo by ID
-router.get("/:id", authMiddleware, getTodoById);
+router.get("/:id", getTodoById);
 
 // Create a new todo
-router.post("/", createNewTodo);
+router.post("/", authMiddleware, createNewTodo);
 
 // Update a todo by ID
 router.put("/:id", updateTodoById);
