@@ -1,3 +1,4 @@
+import { Todo } from "../models/todo-model.js";
 import { readTodos, writeTodos } from "../utils/helper.js";
 
 export const getAllTodos = (req, res) => {
@@ -19,19 +20,22 @@ export const getTodoById = (req, res) => {
   res.status(200).send(todo);
 };
 
-export const createNewTodo = (req, res) => {
-  const { title, description } = req.body;
+export const createNewTodo = async (req, res) => {
+  try {
+    const { title, description } = req.body;
 
-  if (!title || !description) {
-    res.send({ error: "Title and Description are required." });
+    const newTodo = new Todo({
+      title,
+      description,
+      created_by: req.user.id,
+    });
+
+    await newTodo.save();
+    res.status(201).json(newTodo);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Something went wrong!" });
   }
-  const newTodo = { id: Date.now(), title, description };
-
-  const todos = readTodos();
-  todos.push(newTodo);
-
-  writeTodos(todos);
-  res.status(201).send({ todo: { title, description } });
 };
 
 export const updateTodoById = (req, res) => {
