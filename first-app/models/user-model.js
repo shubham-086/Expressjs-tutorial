@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is required"],
       minLength: [8, "Password must be at least 8 characters long"],
-      select: false, // Excludes password from query results by default
+      select: false,
       validate: {
         validator: function (v) {
           // At least one uppercase, one lowercase, one number
@@ -67,4 +67,4 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-export const User = mongoose.model("User", userSchema);
+export const User = mongoose.model("user", userSchema);

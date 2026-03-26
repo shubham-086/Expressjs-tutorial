@@ -31,36 +31,8 @@ import { readUsers, writeUsers } from "../utils/helper.js";
 //   }
 // };
 
-// export const signUp = (req, res) => {
-//   try {
-//     let { name, email, password } = req.body;
-
-//     if (!name && !email && !password) {
-//       res.status(400).send("All fields are required");
-//     }
-
-//     const newUsers = { name, email, password };
-
-//     const users = readUsers() || [];
-//     users.push(newUsers);
-
-//     writeUsers(users);
-
-//     res.status(201).send("Registration successfull.");
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send("Something went wrong!");
-//   }
-// };
-
 export const signUp = async (req, res) => {
   try {
-    let { name, email, password } = req.body;
-
-    if (!name && !email && !password) {
-      res.status(400).send("All fields are required");
-    }
-
     const newUser = new User(req.body);
     await newUser.save();
 
